@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetoBank</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: #00994c;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        header h1 span {
+            color: #00cc66;
+            font-weight: 700;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #00994c;
+        }
+        .card h2 {
+            color: #1a1a1a;
+            margin-top: 0;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00994c;
+        }
+        button {
+            background-color: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.9rem 1.8rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        button:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-success {
+            background-color: #00994c;
+        }
+        .btn-success:hover {
+            background-color: #00b359;
+        }
+        .btn-danger {
+            background-color: #cc0000;
+        }
+        .btn-danger:hover {
+            background-color: #e60000;
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .alert-success {
+            background-color: #e6fff0;
+            color: #007339;
+            border-left: 4px solid #00994c;
+        }
+        .alert-error {
+            background-color: #ffebeb;
+            color: #990000;
+            border-left: 4px solid #cc0000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+        th {
+            background-color: #1a1a1a;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+        td {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #555;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+        .tab:hover {
+            background-color: #e0e0e0;
+        }
+        .tab.active {
+            background-color: #00994c;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1><span>Beto</span>Bank</h1>
+    </header>
+
+    <div id="message-container"></div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="cuentas">Cuentas</div>
+        <div class="tab" data-tab="transferencia">Realizar Transferencia</div>
+        <div class="tab" data-tab="nueva-cuenta">Nueva Cuenta</div>
+    </div>
+
+    <!-- Tab Cuentas -->
+    <div id="cuentas" class="tab-content active">
+        <div class="card">
+            <h2>Listado de Cuentas</h2>
+            <table id="tabla-cuentas">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Propietario</th>
+                    <th class="text-right">Saldo Disponible</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Aquí se cargarán las cuentas desde la API -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tab Transferencia -->
+    <div id="transferencia" class="tab-content">
+        <div class="card">
+            <h2>Realizar Transferencia</h2>
+            <form id="form-transferencia">
+                <div class="form-group">
+                    <label for="cuenta-origen">Cuenta Origen</label>
+                    <select id="cuenta-origen" required>
+                        <option value="">Seleccione una cuenta</option>
+                        <!-- Opciones dinámicas -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cuenta-destino">Cuenta Destino</label>
+                    <select id="cuenta-destino" required>
+                        <option value="">Seleccione una cuenta</option>
+                        <!-- Opciones dinámicas -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="monto">Monto a transferir</label>
+                    <input type="number" id="monto" min="0.01" step="0.01" required placeholder="Ingrese el monto">
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn-success">Realizar Transferencia</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tab Nueva Cuenta -->
+    <div id="nueva-cuenta" class="tab-content">
+        <div class="card">
+            <h2>Crear Nueva Cuenta</h2>
+            <form id="form-nueva-cuenta">
+                <div class="form-group">
+                    <label for="propietario">Nombre del Propietario</label>
+                    <input type="text" id="propietario" required placeholder="Ingrese el nombre completo">
+                </div>
+                <div class="form-group">
+                    <label for="saldo-inicial">Saldo Inicial</label>
+                    <input type="number" id="saldo-inicial" min="0" step="0.01" required placeholder="Ingrese el saldo inicial">
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn-success">Crear Cuenta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // URLs de la API
+    const API_URL = '/api';
+    const ENDPOINTS = {
+        CUENTAS: `${API_URL}/cuentas`,
+        TRANSFERENCIAS: `${API_URL}/transferencias`
+    };
+
+    // Elementos DOM
+    const messageContainer = document.getElementById('message-container');
+    const tablaCuentas = document.getElementById('tabla-cuentas').querySelector('tbody');
+    const formTransferencia = document.getElementById('form-transferencia');
+    const formNuevaCuenta = document.getElementById('form-nueva-cuenta');
+    const selectCuentaOrigen = document.getElementById('cuenta-origen');
+    const selectCuentaDestino = document.getElementById('cuenta-destino');
+
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Formato para cantidades monetarias
+    const formatoMoneda = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+        minimumFractionDigits: 2
+    });
+
+    // API real
+    const api = {
+        // Obtener todas las cuentas
+        getCuentas: function() {
+            return fetch(ENDPOINTS.CUENTAS)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener las cuentas');
+                    }
+                    return response.json();
+                });
+        },
+
+        // Crear una nueva cuenta
+        crearCuenta: function(nuevaCuenta) {
+            return fetch(ENDPOINTS.CUENTAS, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nuevaCuenta)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al crear la cuenta');
+                    }
+                    return response.json();
+                });
+        },
+
+        // Realizar transferencia
+        realizarTransferencia: function(transferencia) {
+            return fetch(ENDPOINTS.TRANSFERENCIAS, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(transferencia)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        const status = response.status;
+                        return response.text().then(text => {
+                            throw { status, message: text };
+                        });
+                    }
+                    return response.text().then(text => ({ message: text }));
+                });
+        }
+    };
+
+    // Funciones de UI
+    function mostrarMensaje(mensaje, tipo = 'success') {
+        messageContainer.innerHTML = `
+                <div class="alert alert-${tipo}">
+                    ${mensaje}
+                </div>
+            `;
+
+        // Auto-eliminar después de 5 segundos
+        setTimeout(() => {
+            messageContainer.innerHTML = '';
+        }, 5000);
+    }
+
+    function cargarCuentas() {
+        api.getCuentas()
+            .then(cuentas => {
+                renderizarTablaCuentas(cuentas);
+                actualizarSelectsCuentas(cuentas);
+            })
+            .catch(error => mostrarMensaje('Error al cargar las cuentas: ' + error.message, 'error'));
+    }
+
+    function renderizarTablaCuentas(cuentas) {
+        tablaCuentas.innerHTML = '';
+
+        if (cuentas.length === 0) {
+            tablaCuentas.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center;">No hay cuentas registradas</td>
+                    </tr>
+                `;
+            return;
+        }
+
+        cuentas.forEach(cuenta => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                    <td>${cuenta.id}</td>
+                    <td>${cuenta.propietario}</td>
+                    <td class="text-right">${formatoMoneda.format(cuenta.saldo)}</td>
+                    <td class="actions">
+                        <button class="btn-success btn-transferir" data-id="${cuenta.id}">Transferir</button>
+                    </td>
+                `;
+            tablaCuentas.appendChild(row);
+        });
+
+        // Asignar eventos a los botones de transferir
+        document.querySelectorAll('.btn-transferir').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const cuentaId = e.target.dataset.id;
+                cambiarTab('transferencia');
+                selectCuentaOrigen.value = cuentaId;
+            });
+        });
+    }
+
+    function actualizarSelectsCuentas(cuentas) {
+        // Limpiar selects
+        selectCuentaOrigen.innerHTML = '<option value="">Seleccione una cuenta</option>';
+        selectCuentaDestino.innerHTML = '<option value="">Seleccione una cuenta</option>';
+
+        // Llenar selects con las cuentas
+        cuentas.forEach(cuenta => {
+            const optionOrigen = document.createElement('option');
+            optionOrigen.value = cuenta.id;
+            optionOrigen.textContent = `${cuenta.id} - ${cuenta.propietario} (${formatoMoneda.format(cuenta.saldo)})`;
+
+            const optionDestino = optionOrigen.cloneNode(true);
+
+            selectCuentaOrigen.appendChild(optionOrigen);
+            selectCuentaDestino.appendChild(optionDestino);
+        });
+    }
+
+    function cambiarTab(tabId) {
+        tabs.forEach(tab => {
+            if (tab.dataset.tab === tabId) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        tabContents.forEach(content => {
+            if (content.id === tabId) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+    }
+
+    // Event Listeners
+    formTransferencia.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const transferencia = {
+            cuentaOrigenId: selectCuentaOrigen.value,
+            cuentaDestinoId: selectCuentaDestino.value,
+            monto: document.getElementById('monto').value
+        };
+
+        // Validaciones básicas
+        if (transferencia.cuentaOrigenId === transferencia.cuentaDestinoId) {
+            mostrarMensaje('La cuenta de origen y destino no pueden ser la misma', 'error');
+            return;
+        }
+
+        api.realizarTransferencia(transferencia)
+            .then(response => {
+                mostrarMensaje(response.message);
+                formTransferencia.reset();
+                cargarCuentas(); // Recargar cuentas para mostrar los nuevos saldos
+                cambiarTab('cuentas'); // Volver a la lista de cuentas
+            })
+            .catch(error => {
+                mostrarMensaje(error.message || 'Error al realizar la transferencia', 'error');
+            });
+    });
+
+    formNuevaCuenta.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const nuevaCuenta = {
+            propietario: document.getElementById('propietario').value,
+            saldo: parseFloat(document.getElementById('saldo-inicial').value)
+        };
+
+        // Validación adicional
+        if (!nuevaCuenta.propietario.trim()) {
+            mostrarMensaje('Por favor ingrese el nombre del propietario', 'error');
+            return;
+        }
+
+        if (isNaN(nuevaCuenta.saldo) || nuevaCuenta.saldo < 0) {
+            mostrarMensaje('El saldo inicial debe ser un número válido y positivo', 'error');
+            return;
+        }
+
+        api.crearCuenta(nuevaCuenta)
+            .then(response => {
+                mostrarMensaje(`¡Bienvenido a BetoBank ${nuevaCuenta.propietario}! Su cuenta ha sido creada con éxito.`);
+                formNuevaCuenta.reset();
+                cargarCuentas();
+                cambiarTab('cuentas');
+            })
+            .catch(error => {
+                mostrarMensaje('Error al crear la cuenta: ' + error.message, 'error');
+            });
+    });
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            cambiarTab(tab.dataset.tab);
+        });
+    });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarCuentas();
+    });
+</script>
+</body>
+</html>
